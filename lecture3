@@ -6,7 +6,7 @@
 # <p> this code : df.drop(df.loc[df['Borough']=='Not assigned'].index, inplace=True)
 #          deletes the rows of postal code that have no borough"</p>
 
-# In[30]:
+# In[46]:
 
 
 import numpy as np
@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 
 
 df = pd.read_excel (r'C:\Users\user\OneDrive\Desktop\Book3.xlsx')
+
 
 
 df.drop(df.loc[df['Borough']=='Not assigned'].index, inplace=True)
@@ -31,3 +32,22 @@ df_1.head(15)
 
 
 df_1.shape
+
+
+# <h1> task 2</h1>
+
+# In[52]:
+
+
+
+df = pd.read_excel (r'C:\Users\user\OneDrive\Desktop\Book3.xlsx')
+
+
+
+df.drop(df.loc[df['Borough']=='Not assigned'].index, inplace=True)
+
+
+df_1=df.reset_index(drop=True)
+dfg = pd.read_excel (r'C:\Users\user\OneDrive\Desktop\Geospatial_Coordinates.xlsx')
+dfm=df_1.merge(dfg, on='Postal Code', how='left')
+dfm.head(15)
