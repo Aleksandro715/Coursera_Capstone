@@ -1,0 +1,33 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# <h1>Task 1</h1>
+# <p> importing the file from pc</p>
+# <p> this code : df.drop(df.loc[df['Borough']=='Not assigned'].index, inplace=True)
+#          deletes the rows of postal code that have no borough"</p>
+
+# In[30]:
+
+
+import numpy as np
+import pandas as pd
+import matplotlib as mplq
+import matplotlib.pyplot as plt
+
+
+df = pd.read_excel (r'C:\Users\user\OneDrive\Desktop\Book3.xlsx')
+
+
+df.drop(df.loc[df['Borough']=='Not assigned'].index, inplace=True)
+
+
+df_1=df.reset_index(drop=True)
+df_1.head(15)
+
+
+# <h2>using .shape code</h2>
+
+# In[29]:
+
+
+df_1.shape
