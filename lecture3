@@ -51,3 +51,44 @@ df_1=df.reset_index(drop=True)
 dfg = pd.read_excel (r'C:\Users\user\OneDrive\Desktop\Geospatial_Coordinates.xlsx')
 dfm=df_1.merge(dfg, on='Postal Code', how='left')
 dfm.head(15)
+
+
+# In[16]:
+
+
+#!conda install -c conda-forge folium=0.5.0 --yes # uncomment this line if you haven't completed the Foursquare API lab
+import folium
+#!conda install -c conda-forge geopy --yes #com
+import geopy
+import pandas as pd
+#!conda install -c conda-forge geopy --yes # uncomment this line if you haven't completed the Foursquare API lab
+from geopy.geocoders import Nominatim
+column_names = ['Borough', 'Neighborhood', 'Latitude', 'Longitude']
+
+# instantiate the dataframe
+neighborhoods = pd.DataFrame(columns=column_names)
+
+
+address = 'Malvern, Rouge'
+
+geolocator = Nominatim(user_agent="to_explorer")
+location = geolocator.geocode(address)
+latitude = location.latitude
+longitude = location.longitude
+print('The geograpical coordinate of Malvern, Rouge	  are {}, {}.'.format(latitude, longitude))
+map_toronto = folium.Map(location=[latitude, longitude], zoom_start=10)
+
+# add markers to map
+for lat, lng, borough, neighborhood in zip(neighborhoods['Latitude'], neighborhoods['Longitude'], neighborhoods['Borough'], neighborhoods['Neighborhood']):
+    label = '{}, {}'.format(neighborhood, borough)
+    label = folium.Popup(label, parse_html=True)
+    folium.CircleMarker(
+        [lat, lng],
+        radius=5,
+        popup=label,
+        color='blue',
+        fill=True,
+        fill_color='#3186cc',
+        fill_opacity=0.7,
+        parse_html=False).add_to(map_toronto)
+map_toronto
