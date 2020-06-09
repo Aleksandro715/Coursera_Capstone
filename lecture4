@@ -1,0 +1,81 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[18]:
+
+
+import numpy as np
+import pandas as pd
+import matplotlib as mplq
+import matplotlib.pyplot as plt
+df = pd.read_excel (r'C:\Users\user\OneDrive\Desktop\Book3.xlsx')
+df.drop(df.loc[df['Borough']=='Not assigned'].index, inplace=True)
+df_1=df.reset_index(drop=True)
+df_1.head(15)
+
+
+#!conda install -c conda-forge folium=0.5.0 --yes # uncomment this line if you haven't completed the Foursquare API lab
+
+
+# In[15]:
+
+
+df_1.shape
+
+
+# In[16]:
+
+
+df = pd.read_excel (r'C:\Users\user\OneDrive\Desktop\Book3.xlsx')
+df.drop(df.loc[df['Borough']=='Not assigned'].index, inplace=True)
+df_1=df.reset_index(drop=True)
+dfg = pd.read_excel (r'C:\Users\user\OneDrive\Desktop\Geospatial_Coordinates.xlsx')
+dfm=df_1.merge(dfg, on='Postal Code', how='left')
+dfm.head(15)
+
+
+# In[21]:
+
+
+import folium
+#!conda install -c conda-forge geopy --yes #com
+import geopy
+import pandas as pd
+#!conda install -c conda-forge geopy --yes # uncomment this line if you haven't completed the Foursquare API lab
+from geopy.geocoders import Nominatim
+column_names = ['Borough', 'Neighborhood', 'Latitude', 'Longitude']
+# instantiate the dataframe
+neighborhoods = pd.DataFrame(columns=column_names)
+
+toronto_data = dfm[dfm['Borough'].str.contains("Toronto")].reset_index(drop=True)
+toronto_data.head()
+
+
+# In[24]:
+
+
+address = 'Toronto, Ontario'
+
+geolocator = Nominatim(user_agent="Ontario_explorer")
+location = geolocator.geocode(address)
+latitude = location.latitude
+longitude = location.longitude
+print('The geograpical coordinate of Toronto city are {}, {}.'.format(latitude, longitude))
+
+map_toronto = folium.Map(location=[latitude, longitude], zoom_start=11)
+
+# add markers to map
+for lat, lng, borough, neighborhood in zip(toronto_data['Latitude'], toronto_data['Longitude'], toronto_data['Borough'], toronto_data['Neighborhood']):
+    label = '{}, {}'.format(neighborhood, borough)
+    label = folium.Popup(label, parse_html=True)
+    folium.CircleMarker(
+        [lat, lng],
+        radius=5,
+        popup=label,
+        color='green',
+        fill=True,
+        fill_color='#3186cc',
+        fill_opacity=0.7,
+        parse_html=False).add_to(map_toronto)
+
+map_toronto
